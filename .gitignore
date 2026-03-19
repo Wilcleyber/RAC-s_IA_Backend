@@ -6,9 +6,6 @@ env/
 # Variáveis Sensíveis (NUNCA SUBIR)
 .env
 
-# Banco de Dados Local (O Render criará o dele ou você rodará a ingestão lá)
-chroma_db/
-
 # Cache do Python
 __pycache__/
 *.py[cod]
