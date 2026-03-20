@@ -6,12 +6,19 @@ load_dotenv()
 
 class Settings:
     PROJECT_NAME: str = "RAC's-IA"
+    
+    # Chaves de API (Puxando do .env)
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY")
-    # Caminho onde os vetores serão salvos
+    HUGGINGFACE_TOKEN: str = os.getenv("HUGGINGFACE_TOKEN") 
+    
+    # Configurações de Caminhos
     CHROMA_PATH: str = "chroma_db"
-    # Caminho onde os PDFs das RACs devem estar
     DOCS_PATH: str = "docs"
-    # Modelo de LLM da Groq
+    
+    # Modelos
+    # Modelo Groq (LLM para o chat)
     MODEL_NAME: str = "llama-3.3-70b-versatile"
+    # Modelo HuggingFace (Para Embeddings via API)
+    EMBEDDING_MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
 
 settings = Settings()

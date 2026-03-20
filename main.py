@@ -29,6 +29,7 @@ def run_ingestion():
         ingest_docs()
         return {"message": "Documentos processados com sucesso!"}
     except Exception as e:
+        print(f"ERRO NO BACKEND: {str(e)}") # <--- Adicione isso para ler no terminal
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/chat")
