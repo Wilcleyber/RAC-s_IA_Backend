@@ -1,41 +1,37 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from core.config import settings
-from core.ingestion import ingest_docs
-from core.rag_engine import get_rag_response # Novo import
+from core.rag_engine import get_rag_response 
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
+# Configuração de CORS (Essencial para o Frontend conversar com o Render)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # No início deixamos "*" para aceitar qualquer origem
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"], # Permite todos os métodos (GET, POST, etc)
-    allow_headers=["*"], # Permite todos os headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Modelo de dados para a pergunta
 class ChatRequest(BaseModel):
     question: str
 
 @app.get("/")
 def read_root():
+    # Esse endpoint é o que o Render usa para saber que o app está vivo!
     return {"status": "online", "project": settings.PROJECT_NAME}
-
-@app.post("/ingest")
-def run_ingestion():
-    try:
-        ingest_docs()
-        return {"message": "Documentos processados com sucesso!"}
-    except Exception as e:
-        print(f"ERRO NO BACKEND: {str(e)}") # <--- Adicione isso para ler no terminal
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/chat")
 def chat(request: ChatRequest):
     try:
+        # Aqui o RAG Engine assume o comando
         answer = get_rag_response(request.question)
         return {"answer": answer}
     except Exception as e:
+        print(f"ERRO NO CHAT: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# REMOVEMOS O ENDPOINT /INGEST DAQUI POR SEGURANÇA NO RENDER
+# A ingestão deve ser feita localmente para não estourar o timeout do Render.
