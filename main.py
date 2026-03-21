@@ -23,6 +23,11 @@ def read_root():
     # Esse endpoint é o que o Render usa para saber que o app está vivo!
     return {"status": "online", "project": settings.PROJECT_NAME}
 
+@app.get("/health")
+def health_check():
+    # Este é o endpoint que o seu Hook useHealthCheck vai bater
+    return {"status": "online", "project": settings.PROJECT_NAME}
+
 @app.post("/chat")
 def chat(request: ChatRequest):
     try:
